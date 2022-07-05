@@ -4,7 +4,7 @@ Drawbotic_Navigation::Drawbotic_Navigation(DB1* bot, float updateRate_ms)
 {
     m_bot = bot;
     m_timebank = 0;
-    m_updateRate_ms = updateRate_ms
+    m_updateRate_ms = updateRate_ms;
     m_queueSize = 0;
 }
 
@@ -190,12 +190,12 @@ bool Drawbotic_Navigation::Stop(NavigationAction* action)
 
 bool Drawbotic_Navigation::PenUp(NavigationAction* action)
 {
-    bot.SetPenUp(true);
+    m_bot->SetPenUp(true);
     return true;
 }
 
 bool Drawbotic_Navigation::PenDown(NavigationAction* action)
 {
-    bot.SetPenUp(false);
+    m_bot->SetPenUp(false);
     return true;
 }
