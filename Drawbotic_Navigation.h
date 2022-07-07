@@ -62,7 +62,7 @@ private:
     bool DriveForward(NavigationAction* action);
     bool Turn(NavigationAction* action);
     bool Rotate(NavigationAction* action);
-    bool Stop(NavigationAction* action);
+    bool Stop(NavigationAction* action, float deltaTime_ms);
     bool PenUp(NavigationAction* action);
     bool PenDown(NavigationAction* action);
 

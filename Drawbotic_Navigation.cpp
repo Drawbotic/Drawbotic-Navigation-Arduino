@@ -168,7 +168,7 @@ void Drawbotic_Navigation::Update(float deltaTime_ms)
                 finished = Rotate(currentAction);
                 break;
             case NAV_STOP:
-                finished = Stop(currentAction);
+                finished = Stop(currentAction, deltaTime_ms);
                 break;
             case NAV_PEN_UP:
                 finished = PenUp(currentAction);
@@ -493,7 +493,7 @@ bool Drawbotic_Navigation::Rotate(NavigationAction* action)
   return true;
 }
 
-bool Drawbotic_Navigation::Stop(NavigationAction* action)
+bool Drawbotic_Navigation::Stop(NavigationAction* action, float deltaTime_ms)
 {
     float t = action->progress;
     float stopDuration = action->params[0];
@@ -501,7 +501,7 @@ bool Drawbotic_Navigation::Stop(NavigationAction* action)
     if (t < stopDuration) {
         m_bot->SetMotorSpeed(1, 0);
         m_bot->SetMotorSpeed(2, 0);
-        action->progress = t + m_updateRate_ms; 
+        action->progress = t + deltaTime_ms; 
         return false;
     }
     return true;
