@@ -495,13 +495,12 @@ bool Drawbotic_Navigation::Rotate(NavigationAction* action)
 
 bool Drawbotic_Navigation::Stop(NavigationAction* action, float deltaTime_ms)
 {
-    float t = action->progress;
     float stopDuration = action->params[0];
 
-    if (t < stopDuration) {
+    if (action->progress < stopDuration) {
         m_bot->SetMotorSpeed(1, 0);
         m_bot->SetMotorSpeed(2, 0);
-        action->progress = t + deltaTime_ms; 
+        action->progress += deltaTime_ms; 
         return false;
     }
     return true;
