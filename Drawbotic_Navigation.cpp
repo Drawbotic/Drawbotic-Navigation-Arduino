@@ -184,6 +184,13 @@ void Drawbotic_Navigation::Update(float deltaTime_ms)
                 m_queueHead = currentAction->next;
                 delete currentAction;
                 m_queueSize--;
+
+                if (m_queueSize == 0) 
+                {
+                    m_bot->SetMotorSpeed(1, 0);
+                    m_bot->SetMotorSpeed(2, 0);
+                }
+
             }
         }
         m_timebank = 0; //reset the time bank for the next update
@@ -195,18 +202,16 @@ void Drawbotic_Navigation::Update(float deltaTime_ms)
 void Drawbotic_Navigation::SetSpeed(float speed)
 {
     if (speed > 0 && speed < 1)
-    {
         m_speed = speed;
-    }
+    
 }
 
 
 void Drawbotic_Navigation::SetAccelRatio(float accelR)
 {
     if (accelR >= 0 && accelR < 0.5)
-    {
         m_accelR = accelR;
-    }
+    
 }
 
 
