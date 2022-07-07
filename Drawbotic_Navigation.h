@@ -26,8 +26,8 @@ enum NavigationType
 struct NavigationAction 
 {
     NavigationType type;
-    //NavigationType nextType;
-    //NavigationType prevType;
+    NavigationType nextType;
+    NavigationType prevType;
     //rest of the stuff
     float params[MAX_PARAMS];
     float followSpeed;
