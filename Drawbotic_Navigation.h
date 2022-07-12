@@ -42,7 +42,7 @@ struct NavigationAction
 class Drawbotic_Navigation
 {
 public:
-    Drawbotic_Navigation(DB1* bot, float updateRate_ms = 10.0f, float speed = 0.05f, float correctionPower = 0.001f, float accelR = 0.05f);
+    Drawbotic_Navigation(DB1* bot, float updateRate_ms = 10.0f, float speed = 0.05f, float correctionPower = 0.001f);
     void ClearAllActions();
     void AddActionFront(NavigationAction* action);
     void AddActionBack(NavigationAction* action);
