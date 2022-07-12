@@ -68,8 +68,6 @@ private:
     float m_updateRate_ms;
     float m_speed;
     float m_cp;
-    float m_accelR;
-
 };
 
 #endif
