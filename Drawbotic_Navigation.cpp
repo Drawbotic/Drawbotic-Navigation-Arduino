@@ -201,7 +201,7 @@ bool Drawbotic_Navigation::DriveForward(NavigationAction* action)
   float dist = action->params[0];
 
   float circum = 2*WHEEL_RADIUS*M_PI; 
-  float encLimit = (dist*ENC_BITS_P_REV)/circum;
+  float encLimit = (dist*ENC_BITS_P_REV*FORWARD_ERROR)/circum;
 
   if  (encoderCount < encLimit) 
   {
