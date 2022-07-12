@@ -1,6 +1,6 @@
 #include "Drawbotic_Navigation.h"
 
-Drawbotic_Navigation::Drawbotic_Navigation(DB1* bot, float updateRate_ms, float speed, float correctionPower, float accelR)
+Drawbotic_Navigation::Drawbotic_Navigation(DB1* bot, float updateRate_ms, float speed, float correctionPower)
 {
     m_bot = bot;
     m_timebank = 0;
@@ -8,7 +8,6 @@ Drawbotic_Navigation::Drawbotic_Navigation(DB1* bot, float updateRate_ms, float 
     m_queueSize = 0;
     m_speed = speed;
     m_cp = correctionPower;
-    m_accelR = accelR; // !!
 }
 
 void Drawbotic_Navigation::ClearAllActions()
@@ -180,7 +179,7 @@ void Drawbotic_Navigation::Update(float deltaTime_ms)
                 {
                     m_bot->SetMotorSpeed(1, 0);
                     m_bot->SetMotorSpeed(2, 0);
-                    ClearAllActions(); // ??
+                    ClearAllActions(); 
                 }
             }
         }
@@ -195,15 +194,6 @@ void Drawbotic_Navigation::SetSpeed(float speed)
         m_speed = speed;
     
 }
-
-// !!
-void Drawbotic_Navigation::SetAccelRatio(float accelR)
-{
-    if (accelR >= 0 && accelR < 0.5)
-        m_accelR = accelR;
-    
-}
-
 
 bool Drawbotic_Navigation::DriveForward(NavigationAction* action)
 {
@@ -254,7 +244,7 @@ bool Drawbotic_Navigation::Turn(NavigationAction* action)
 
       m_bot->SetMotorSpeed(1, m_speed);
       m_bot->SetMotorSpeed(2, action->followSpeed * multiplier);  
-      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*r1); 
+      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*r1*TURN_ERROR); 
       return false;
     }
   }
@@ -277,7 +267,7 @@ bool Drawbotic_Navigation::Turn(NavigationAction* action)
 
       m_bot->SetMotorSpeed(1, action->followSpeed * multiplier);
       m_bot->SetMotorSpeed(2, m_speed);  
-      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*r2); 
+      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*r2*TURN_ERROR); 
       return false;
     }
   }
@@ -305,7 +295,7 @@ bool Drawbotic_Navigation::Rotate(NavigationAction* action)
       action->followSpeed += (error * m_cp);
       m_bot->SetMotorSpeed(1, m_speed);
       m_bot->SetMotorSpeed(2, -action->followSpeed);  // = follow speed, then multiply
-      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS); 
+      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS*ROTATE_ERROR); 
       return false;
     }
   }
@@ -326,7 +316,7 @@ bool Drawbotic_Navigation::Rotate(NavigationAction* action)
 
       m_bot->SetMotorSpeed(1, -action->followSpeed);
       m_bot->SetMotorSpeed(2, m_speed);  
-      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS);  
+      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS*ROTATE_ERROR);  
       return false;
     }
   }
