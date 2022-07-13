@@ -50,7 +50,6 @@ public:
     NavigationAction* MakePenAction(bool up);
     void Update(float deltaTime_ms);
     void SetSpeed(float speed);
-    void SetAccelRatio(float accelR);
 
 private:
     DB1* m_bot;
