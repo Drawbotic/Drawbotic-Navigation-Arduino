@@ -22,7 +22,6 @@ enum NavigationType
     NAV_STOP,
     NAV_PEN_UP,
     NAV_PEN_DOWN,
-    NAV_UNKNOWN
 };
 
 struct NavigationAction 
