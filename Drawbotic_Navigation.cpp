@@ -3,7 +3,7 @@
 Drawbotic_Navigation::Drawbotic_Navigation(DB1* bot, float updateRate_ms, float speed, float correctionPower)
 {
     m_bot = bot;
-    m_timebank = 0;
+    m_timeBank = 0;
     m_updateRate_ms = updateRate_ms;
     m_queueSize = 0;
     m_speed = speed;
@@ -137,9 +137,9 @@ NavigationAction* Drawbotic_Navigation::MakePenAction(bool up)
 
 void Drawbotic_Navigation::Update(float deltaTime_ms)
 {
-    m_timebank += deltaTime_ms;
+    m_timeBank += deltaTime_ms;
 
-    if(m_timebank >= m_updateRate_ms)
+    if(m_timeBank >= m_updateRate_ms)
     {
         NavigationAction* currentAction = m_queueHead;
 
@@ -183,7 +183,7 @@ void Drawbotic_Navigation::Update(float deltaTime_ms)
                 }
             }
         }
-        m_timebank = 0; //reset the time bank for the next update
+        m_timeBank = 0; //reset the time bank for the next update
     }
 }
 

@@ -62,7 +62,7 @@ private:
     bool PenDown(NavigationAction* action);
 
     int m_queueSize;
-    float m_timebank;
+    float m_timeBank;
     float m_updateRate_ms;
     float m_speed;
     float m_cp;
