@@ -58,8 +58,8 @@ private:
     bool Turn(NavigationAction* action);
     bool Rotate(NavigationAction* action);
     bool Stop(NavigationAction* action, float deltaTime_ms);
-    bool PenUp(NavigationAction* action);
-    bool PenDown(NavigationAction* action);
+    bool PenUp();
+    bool PenDown();
 
     int m_queueSize;
     float m_timeBank;

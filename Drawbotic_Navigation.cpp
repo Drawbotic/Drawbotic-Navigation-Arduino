@@ -161,10 +161,10 @@ void Drawbotic_Navigation::Update(float deltaTime_ms)
                 finished = Stop(currentAction, deltaTime_ms);
                 break;
             case NAV_PEN_UP:
-                finished = PenUp(currentAction);
+                finished = PenUp();
                 break;
             case NAV_PEN_DOWN:
-                finished = PenDown(currentAction);
+                finished = PenDown();
                 break;
             }
 
@@ -336,13 +336,13 @@ bool Drawbotic_Navigation::Stop(NavigationAction* action, float deltaTime_ms)
     return true;
 }
 
-bool Drawbotic_Navigation::PenUp(NavigationAction* action)
+bool Drawbotic_Navigation::PenUp()
 {
     m_bot->SetPenUp(true);
     return true;
 }
 
-bool Drawbotic_Navigation::PenDown(NavigationAction* action)
+bool Drawbotic_Navigation::PenDown()
 {
     m_bot->SetPenUp(false);
     return true;
