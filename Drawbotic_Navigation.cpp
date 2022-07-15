@@ -177,11 +177,12 @@ void Drawbotic_Navigation::Update(float deltaTime_ms)
                 delete currentAction;
                 m_queueSize--;
 
-                // if the queue is empty, stop the robot and 
+                // if the queue is empty, stop the robot  
                 if (m_queueSize == 0) 
                 {
                     m_bot->SetMotorSpeed(1, 0);
                     m_bot->SetMotorSpeed(2, 0);
+                    m_queueHead = NULL;
                     m_queueTail = NULL; // ?
                     //ClearAllActions(); 
                 }
@@ -211,11 +212,11 @@ bool Drawbotic_Navigation::DriveForward(NavigationAction* action)
 
   if  (encoderCount < encLimit) 
   {
-    //Find the difference between the two encoders since last read
+    // finding the difference between the two encoders since last read
     float d1 = m_bot->GetM1EncoderDelta();
     float d2 = m_bot->GetM2EncoderDelta();
     float error = d1 - d2; 
-    //Calculate the second motor speed based on the error value and the correction "strength" factor
+    // calculating the second motor speed based on the error value and the correction "strength" factor
     action->followSpeed += (error * m_cp);
 
     m_bot->SetMotorSpeed(1, m_speed);
@@ -237,23 +238,25 @@ bool Drawbotic_Navigation::Turn(NavigationAction* action)
   {
     float r1 = arcRad + BOT_RADIUS; 
     float r2 = arcRad - BOT_RADIUS;
+
     // how much slower the inside wheel needs to spin to match the angular velocity of the outside wheel
     float multiplier = r2/r1; 
 
     if (angleCount < angle) 
     {
-      //Find the difference between the two encoders since last read
+      // finding the difference between the two encoders since last read
       float d1 = m_bot->GetM1EncoderDelta();
       float d2 = m_bot->GetM2EncoderDelta(); 
       float error = d1 - (d2/multiplier); 
-      //Calculate the second motor speed based on the error value and the correction "strength" factor
+
+      // calculating the second motor speed based on the error value and the correction "strength" factor
       action->followSpeed += (error * m_cp);
 
       m_bot->SetMotorSpeed(1, m_speed);
       m_bot->SetMotorSpeed(2, action->followSpeed * multiplier);  
 
       // calculating progress in degrees based on encoder signals
-      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*r1*TURN_ERROR); 
+      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*r1*L_TURN_ERROR); 
       return false;
     }
   }
@@ -263,24 +266,26 @@ bool Drawbotic_Navigation::Turn(NavigationAction* action)
   {
     float r1 = arcRad - BOT_RADIUS; 
     float r2 = arcRad + BOT_RADIUS;
+
     // how much slower the inside wheel needs to spin to match the angular velocity of the outside wheel
     float multiplier = r1/r2;
 
     // angle is negative so the absolute value is taken
     if (angleCount < abs(angle)) 
     {
-      //Find the difference between the two encoders since last read
+      // finding the difference between the two encoders since last read
       float d1 = m_bot->GetM1EncoderDelta();
       float d2 = m_bot->GetM2EncoderDelta(); 
       float error = d2 - (d1/multiplier);
-      //Calculate the first motor speed based on the error value and the correction "strength" factor
+
+      // calculating the first motor speed based on the error value and the correction "strength" factor
       action->followSpeed += (error * m_cp);
 
       m_bot->SetMotorSpeed(1, action->followSpeed * multiplier);
       m_bot->SetMotorSpeed(2, m_speed);  
 
     // calculating progress in degrees based on encoder signals
-      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*r2*TURN_ERROR); 
+      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*r2*R_TURN_ERROR); 
       return false;
     }
   }
@@ -293,12 +298,12 @@ bool Drawbotic_Navigation::Rotate(NavigationAction* action)
   float angleCount = action->progress;
   float angle = action->params[0];
 
-  // left rotation
+  // anti-clockwise rotation
   if (angle >= 0) 
   { 
     if (angleCount < angle) 
     {
-      //Find the difference between the two encoders since last read
+      // finding the difference between the two encoders since last read
       float d1 = m_bot->GetM1EncoderDelta();
       float d2 = m_bot->GetM2EncoderDelta();
 
@@ -307,24 +312,24 @@ bool Drawbotic_Navigation::Rotate(NavigationAction* action)
       d2 = abs(d2);
       float error = d1 - d2; 
 
-      //Calculate the second motor speed based on the error value and the correction "strength" factor
+      // calculating the second motor speed based on the error value and the correction "strength" factor
       action->followSpeed += (error * m_cp);
       m_bot->SetMotorSpeed(1, m_speed);
       m_bot->SetMotorSpeed(2, -action->followSpeed); // motor 2 needs to spin in the opposite direction
 
       // calculating progress in degrees based on encoder signals
-      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS*ROTATE_ERROR); 
+      action->progress = angleCount + (180*d1)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS*L_ROTATE_ERROR); 
       return false;
     }
   }
 
-  // right rotation
+  // clockwise rotation
   else if (angle < 0) 
   { 
     // angle is negative so the absolute value is taken
     if (angleCount < abs(angle)) 
     {
-      //Find the difference between the two encoders since last read
+      // finding the difference between the two encoders since last read
       float d1 = m_bot->GetM1EncoderDelta();
       float d2 = m_bot->GetM2EncoderDelta(); 
 
@@ -332,14 +337,15 @@ bool Drawbotic_Navigation::Rotate(NavigationAction* action)
       d1 = abs(d1);
       d2 = abs(d2);
       float error = d2 - d1; 
-      //Calculate the first motor speed based on the error value and the correction "strength" factor
+
+      // calculating the first motor speed based on the error value and the correction "strength" factor
       action->followSpeed += (error * m_cp);
 
       m_bot->SetMotorSpeed(1, -action->followSpeed); // motor 1 needs to spin in the opposite direction
       m_bot->SetMotorSpeed(2, m_speed);  
 
       // calculating progress in degrees based on encoder signals
-      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS*ROTATE_ERROR);  
+      action->progress = angleCount + (180*d2)/(M_PI*ENC_BITS_P_MM*BOT_RADIUS*R_ROTATE_ERROR);  
       return false;
     }
   }
