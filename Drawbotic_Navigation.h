@@ -5,8 +5,8 @@
 
 #define MAX_PARAMS 3
 #define ENC_BITS_P_REV 295.6793 
-#define TURN_ERROR 1.01789  
-#define ROTATE_ERROR 1.0186 
+#define TURN_ERROR 1.01789  // explore diff b/w L and R
+#define ROTATE_ERROR 1.0186 // explore diff b/w L and R
 #define FORWARD_ERROR 1.0067
 #define ENC_BITS_P_MM 2.3529// encoder signals per rotation (295.6793)/wheel circum (40pi)
 #define WHEEL_RADIUS 20
