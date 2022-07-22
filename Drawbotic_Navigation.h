@@ -4,13 +4,13 @@
 #include <Drawbotic_DB1.h>
 
 #define MAX_PARAMS 3
-#define ENC_BITS_P_REV 295.6793 
-#define L_TURN_ERROR 1.01789  
-#define R_TURN_ERROR 1.0045 
-#define L_ROTATE_ERROR 1.008 
-#define R_ROTATE_ERROR 1.0045
-#define FORWARD_ERROR 1.0067
-#define ENC_BITS_P_MM 2.3529// encoder signals per rotation (295.6793)/wheel circum (40pi)
+#define ENC_BITS_P_REV 295.6793 // number of encoder steps in one revolution of the wheel, value obtained from testing, drew long line and counted encoder steps
+#define L_TURN_ERROR 1.01789 // scalar multiplier, obtained from testing, made left turns more accurate
+#define R_TURN_ERROR 1.0045 // scalar multiplier, obtained from testing, made right turns more accurate
+#define L_ROTATE_ERROR 1.008 // scalar multiplier, obtained from testing, made left rotate more accurate
+#define R_ROTATE_ERROR 1.0045 // scalar multiplier, obtained from testing, made right rotations more accurate
+#define FORWARD_ERROR 1.0067 // scalar multiplier, obtained from testing, made driving forward more accurate
+#define ENC_BITS_P_MM 2.3529 // encoder signals per rotation (295.6793)/wheel circum (40pi)
 #define WHEEL_RADIUS 20
 #define BOT_RADIUS 60
 
