@@ -7,24 +7,22 @@ Drawbotic_Navigation nav(&bot);
 int last_ms = 0;
 
 void setup() {
-    bot.Initialise();
-
-    CreatePolygon(50, 8);
+  bot.init();
+  CreatePolygon(50, 8);
 }
 
 void loop() {
-    // put your main code here, to run repeatedly:
   int current_ms = millis();
   int deltaTime_ms = current_ms - last_ms;
 
-  nav.Update(deltaTime_ms);
+  nav.update(deltaTime_ms);
 
   last_ms = current_ms;
 }
 
-void CreatePolygon(int sideLength, int sideNum) {
-    for(int i = 0; i < sideNum; i++) {
-        nav.AddActionBack(nav.MakeForwardAction(sideLength));
-        nav.AddActionBack(nav.MakeRotateAction(360.0f / sideNum));
-    }
+void CreatePolygon(int sideLength, int numSides) {
+  for (int i = 0; i < numSides; i++) {
+    nav.addActionBack(nav.makeForwardAction(sideLength));
+    nav.addActionBack(nav.makeRotateAction(360.0f / sideNum));
+  }
 }
