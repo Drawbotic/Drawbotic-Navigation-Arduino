@@ -1,5 +1,15 @@
 #include "Drawbotic_Navigation.h"
 
+/*!
+ * \brief Construct a new Drawbotic_Navigation object with it's own Navigation queue
+ * 
+ * \param useIMU (Default: true) If true the navigation will use the BNO085 IMU for rotate actions 
+ * \param updateRate_ms (Default: 1.0 ms) The rate in milliseconds that navigation changes should be calculated. The update method will check to see if at least this much has passed since last update before changing the navigation output
+ * \param speed (Default: 0.1) The maximum speed at which the motors can run, slower speeds with increase accuracy
+ * \param correctionPower (Default: 0.015) The stength of the correction factor uses to keep the two motors in sync
+ * 
+ * \note Using the IMU should provide better angular accuracy than counting encoder steps. However, the IMU may be effected by strong magnetic fields. If this is the case it migth be more accurate to disable IMU based rotations.
+ */
 Drawbotic_Navigation::Drawbotic_Navigation(bool useIMU, float updateRate_ms, float speed, float correctionPower) {
   m_timeBank = 0;
   m_updateRate_ms = updateRate_ms;
@@ -9,6 +19,9 @@ Drawbotic_Navigation::Drawbotic_Navigation(bool useIMU, float updateRate_ms, flo
   m_useIMU = useIMU;
 }
 
+/*!
+ * \brief Clears all actions from the navigation queue
+ */
 void Drawbotic_Navigation::clearAllActions() {
   // Iterate through the queue until there is nothing next
   while (m_queueHead != NULL)
@@ -23,6 +36,12 @@ void Drawbotic_Navigation::clearAllActions() {
   m_queueTail = NULL;
 }
 
+/*!
+ * \brief Add a new forward action to the navigation queue. The action will cause DB-1 to travel forward a set distance
+ * 
+ * \param distance_mm The distance in millimetres to travel
+ * \param front (Default: false) If true this action will be inserted at the front of the queue, before all existing queued actions
+ */
 void Drawbotic_Navigation::addForwardAction(float distance_mm, bool front) {
   NavigationAction* a = makeForwardAction(distance_mm);
   if(front) {
@@ -33,6 +52,13 @@ void Drawbotic_Navigation::addForwardAction(float distance_mm, bool front) {
   }
 }
 
+/*!
+ * \brief Add a new turn action to the navigation queue. The action will cause DB-1 to turn following an arc of a certain radius and angle
+ * 
+ * \param radius_mm The radius of the circle that defines the arc for DB-1 to follow
+ * \param angle_deg The number of degrees around that circle that DB-1 should go. A positive angle moves DB-1 in a Counter-Clockwise direction, a negative angle moves DB-1 in a Clockwise direction.
+ * \param front (Default: false) If true this action will be inserted at the front of the queue, before all existing queued actions
+ */
 void Drawbotic_Navigation::addTurnAction(float radius_mm, float angle_deg, bool front) {
   NavigationAction* a = makeTurnAction(radius_mm, angle_deg);
   if(front) {
@@ -43,6 +69,14 @@ void Drawbotic_Navigation::addTurnAction(float radius_mm, float angle_deg, bool 
   }
 }
 
+/*!
+ * \brief Add a new rotate action to the navigation queue. The actoin will cause DB-1 to rotate a specific amount on the spot.
+ * 
+ * \param angle_deg The number of degrees to rotate. A positive angle moves DB-1 in a Counter-Clockwise direction, a negative angle moves DB-1 in a Clockwise direction.
+ * \param front (Default: false) If true this action will be inserted at the front of the queue, before all existing queued actions
+ * 
+ * \note This action is made more accurate by using the IMU which may be susceptible to magnetic interference. If accuracy issues present try disabling the IMU in the constructor.
+ */
 void Drawbotic_Navigation::addRotateAction(float angle_deg, bool front) {
   NavigationAction* a = makeRotateAction(angle_deg);
   if(front) {
@@ -53,6 +87,12 @@ void Drawbotic_Navigation::addRotateAction(float angle_deg, bool front) {
   }
 }
 
+/*!
+ * \brief Add a new stop action to the navigation queue. The action will cause DB-1 to stop in place for a set amount of time.
+ * 
+ * \param time_ms The time (in milliseconds) to stop for
+ * \param front (Default: false) If true this action will be inserted at the front of the queue, before all existing queued actions
+ */
 void Drawbotic_Navigation::addStopAction(float time_ms, bool front) {
   NavigationAction* a = makeStopAction(time_ms);
   if(front) {
@@ -63,6 +103,12 @@ void Drawbotic_Navigation::addStopAction(float time_ms, bool front) {
   }
 }
 
+/*!
+ * \brief Add a new pen action to the navigation queue. The action will cause DB-1 to raise or lower the pen
+ * 
+ * \param down If true the action will cause DB-1 to lower the pen when processed. If false the action will raise the pen
+ * \param front (Default: false) If true this action will be inserted at the front of the queue, before all existing queued actions
+ */
 void Drawbotic_Navigation::addPenAction(bool down, bool front) {
   NavigationAction* a = makePenAction(down);
   if(front) {
@@ -73,6 +119,13 @@ void Drawbotic_Navigation::addPenAction(bool down, bool front) {
   }
 }
 
+/*!
+ * \brief Update the navigation system. This method will recalculate the motor speeds based on the current action to perform. If an action is complete calling update will cause the queue to move on to the next action. Calling update while the queue is empty will have no effect.
+ * 
+ * \param deltaTime_ms The number of milliseconds that have past since update was last called. This is required to ensure that timing based actions are performed correctly. It is also used to determine if the next step of the navigation logic should be performed. See the updateRate_ms paramter in the Constructor
+ * 
+ * \note Update must be called peroidically within the main execution loop. The delta time parameter must be correctly provided by the calling code.
+ */
 void Drawbotic_Navigation::update(float deltaTime_ms) {
   m_timeBank += deltaTime_ms;
 
@@ -135,6 +188,11 @@ void Drawbotic_Navigation::update(float deltaTime_ms) {
   }
 }
 
+/*!
+ * \brief Sets the maximum speed that DB-1 will use during navigation movements
+ * 
+ * \param speed A vaule between 0.0-1.0 where 0.0 is no power and 1.0 is full power
+ */
 void Drawbotic_Navigation::setSpeed(float speed) {
   if (speed > 0 && speed < 1)
     m_speed = speed;

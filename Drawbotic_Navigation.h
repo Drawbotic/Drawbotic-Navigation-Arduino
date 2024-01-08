@@ -15,6 +15,11 @@
 #define ROTATE_KP       0.03f
 #define FORWARD_KP      0.01f
 
+/*!
+ * \brief The Drawbotic_Navigation class contains all of the functionality needed to create a queue of navigation actions that can be performed sequentially.
+ * 
+ * \note Multiple instances of Drawbotic_Navigation can be created to implement multiple queues to be run at different times.
+ */
 class Drawbotic_Navigation {
 public:
   Drawbotic_Navigation(bool useIMU = true, float updateRate_ms = 1.0f, float speed = 0.1f, float correctionPower = 0.015f);
@@ -24,6 +29,10 @@ public:
   void addRotateAction(float angle_deg, bool front=false);
   void addStopAction(float time_ms, bool front=false);
   void addPenAction(bool down, bool front=false);
+  /*!
+   * \brief The current size of the navigation queue
+   * \return The current size of the navigation queue 
+   */
   int  getQueueSize() { return m_queueSize; }
   void update(float deltaTime_ms);
   void setSpeed(float speed);
